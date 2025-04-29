@@ -73,10 +73,93 @@ const updateUserById = (req, res) =>{
     );
 };
 
+const getAllUsersByRole = (req, res) => {
+  //query, body, params
+  const  { role } = req.body;
+  db.query("SELECT * FROM users WHERE role=?", [role], (error, results) => {
+    if(error) {
+      console.log(`Error get all users by role`, error);
+      return res.status(500).send({message: "Severda xatolik"});
+    }
+    res.send(results);
+  });
+};
+
+const getUserByAnyParams = (req, res) => {
+  const {first_name, last_name, email, phone} = req.body;
+  let where = "true";
+  if(first_name){
+    where+= ` AND first_name='${first_name}'`;
+  }
+  if(last_name){
+    where += ` AND last_name='${last_name}'`;
+  }
+  if (email) {
+    where += ` AND email='${email}'`;
+  }
+  if (phone) {
+    where += ` AND phone='${phone}'`;
+  }
+  if(where == "true"){
+    return res
+      .status(400)
+      .send({message: "Qidirish parametrlarini kiriting"});
+  }
+  db.query(
+    `SELECT * FROM users WHERE ${where}`,
+    (error, result) => {
+      if(error) {
+        console.log(`Error get users`, error);
+        return res.status(500).send({message: "Serverda xatolik"});
+      }
+      res.send(result);
+    }
+  );
+};
+
+const findOwnerStadium = (req, res) => {
+  const {first_name, last_name} = req.body;
+  db.query( `SELECT u.first_name, u.phone, s.name FROM  users u
+LEFT JOIN stadium s ON u.id = s.owner_id
+LEFT JOIN images i ON s.id = i.stadion_id
+WHERE first_name='${first_name}' and last_name='${last_name}'`, (error, results) => {
+    if (error) {
+      console.log(`Error get all users by role`, error);
+      return res.status(500).send({ message: "Severda xatolik" });
+    }
+    res.send(results);
+  });
+};
+
+const findOwnerPhone = (req, res) => {
+  const { phone } = req.body;
+  db.query(
+    `SELECT u.first_name, u.phone, r.comment, s.name FROM users u
+LEFT JOIN review r ON u.id = r.user_id
+LEFT JOIN stadium s ON s.id = r.stadion_id
+WHERE phone = '${phone}' `,
+    (error, results) => {
+      if (error) {
+        console.log(`Error get all users by role`, error);
+        return res.status(500).send({ message: "Severda xatolik" });
+      }
+      res.send(results);
+    }
+  );
+};
+
+
+
+
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserById,
     removeUserById,
-    updateUserById
+    updateUserById,
+    getAllUsersByRole,
+    getUserByAnyParams,
+    findOwnerStadium,
+    findOwnerPhone
 };

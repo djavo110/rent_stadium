@@ -3,7 +3,8 @@ const { getStadiumAll,
     getOneStadiumById,
     createStadium,
     updateStadiumById,
-    removeStadiumById 
+    removeStadiumById, 
+    filterStadion
     } = require("../controllers/stadium.controller");
 
 let stadiumRouter = Router();
@@ -11,6 +12,7 @@ let stadiumRouter = Router();
 stadiumRouter.get("/all", getStadiumAll);
 stadiumRouter.get("/:id", getOneStadiumById);
 stadiumRouter.post("/create", createStadium);
+stadiumRouter.post("/filterByPrice", filterStadion)
 stadiumRouter.patch("/:id", updateStadiumById);
 stadiumRouter.delete("/:id", removeStadiumById);
 

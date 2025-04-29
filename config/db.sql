@@ -63,3 +63,24 @@ SHOW TABLES
 
 SELECT * FROM users
 
+SELECT u.first_name, u.phone, s.name FROM  users u
+LEFT JOIN stadium s ON u.id = s.owner_id
+LEFT JOIN images i ON s.id = i.stadion_id
+WHERE first_name="Jobir" and last_name='Sobirov'
+
+SELECT * FROM  booking b
+LEFT JOIN stadium s ON b.stadion_id = s.id
+LEFT JOIN users i ON b.id 
+WHERE b.booking_date BETWEEN "2025-01-01" AND  "2025-06-01"
+AND s.name LIKE '%ARENA%'
+
+SELECT u.first_name, u.phone, r.comment, s.name FROM users u
+LEFT JOIN review r ON u.id = r.user_id
+LEFT JOIN stadium s ON s.id = r.stadion_id
+WHERE phone = '998911234567'
+
+SELECT * FROM users
+
+SELECT * FROM stadium s
+LEFT JOIN booking b ON s.id = b.stadion_id
+WHERE end_time - start_time >=2
